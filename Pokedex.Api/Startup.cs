@@ -1,15 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Pokedex.Service;
+using Pokedex.Service.Contracts;
+using Pokedex.Service.Contracts.PokeApiDto;
+using Pokedex.Service.Contracts.ResponseDto;
+using Pokedex.Service.Dependencies;
+using Pokedex.Service.Dependencies.Contracts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net.Http.Headers;
 
 namespace Pokedex.Api
 {
@@ -22,14 +23,30 @@ namespace Pokedex.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
             services.AddControllers();
+
+            services.AddHttpClient("PokeApi", httpClient =>
+            {
+                httpClient.BaseAddress = new Uri(Configuration["PokeApi:BaseUri"]);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            services.AddHttpClient("FunTranslationsApi", httpClient =>
+            {
+                httpClient.BaseAddress = new Uri(Configuration["FunTranslationsApi:BaseUri"]);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            services.AddScoped<IMapper<PokemonSpecies, PokemonDetail>, PokemonDetailResponseMapper>();
+            services.AddScoped<IPokeApiService, PokeApiService>();
+
+
+            services.AddSwaggerGen();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -37,7 +54,15 @@ namespace Pokedex.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+
             app.UseHttpsRedirection();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("swagger/v1/swagger.json", "Pokedex Api v1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 

@@ -25,6 +25,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokedex.Service.Dependencie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokedex.Service.Tests", "Pokedex.Service.Tests\Pokedex.Service.Tests.csproj", "{41EA86ED-5595-458E-977B-1E3E68E44FDC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CC5AE011-7A31-4C05-9509-A7DAB94A8C72}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		dockerfile = dockerfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

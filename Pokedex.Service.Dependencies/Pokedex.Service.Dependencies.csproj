@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pokedex.Service.Contracts\Pokedex.Service.Contracts.csproj" />
+    <ProjectReference Include="..\Pokedex.Service.Dependencies.Contracts\Pokedex.Service.Dependencies.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>
